@@ -1,6 +1,8 @@
 # Lab 5: Use Bob to Build Agentic Flows for Expense Processing
 
-> **📥 Download Lab Guide:** [IBM i User Group - Create wxO Agentic Workflows with Bob.pdf](https://github.ibm.com/Luke-Driver/2ndJuneWxOBob/raw/main/assets/IBM%20i%20User%20Group%20-%20Create%20wxO%20Agentic%20Workflows%20with%20Bob.pdf)
+> **🔗 Follow the Workshop:** [Bobchestrate Workshop - Agentic Workflows](https://juseljuk.github.io/bobchestrate-workshop/)
+>
+> **📥 Additional Resource:** [IBM i User Group - Create wxO Agentic Workflows with Bob.pdf](https://github.ibm.com/Luke-Driver/2ndJuneWxOBob/raw/main/assets/IBM%20i%20User%20Group%20-%20Create%20wxO%20Agentic%20Workflows%20with%20Bob.pdf)
 
 ## 📋 Overview
 
