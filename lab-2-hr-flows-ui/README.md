@@ -58,7 +58,7 @@ If you haven't yet as part of the earlier steps of the HR Manager lab, download 
 
 In this part of the lab we will implement the following workflow: 
 
-![alt text](./hands-on-lab-assets/flow_to_build.jpeg)
+![alt text](./assets/flow_to_build.jpeg)
 
 We will now walk you through creating the above workflow step by step.  We will first create a separate agent to experiment. 
 
@@ -66,41 +66,41 @@ We will now walk you through creating the above workflow step by step.  We will 
 
 Open the Agent Builder in watsonx Orchestrate, if you aren't there already -- click on **Build->Agent Builder** in the main hamburger menu. 
 
-![alt text](./hands-on-lab-assets/open_agent_builder.png)
+![alt text](./assets/open_agent_builder.png)
 
 Create a new agent:
 
-![alt text](./hands-on-lab-assets/create_new_agent.png)
+![alt text](./assets/create_new_agent.png)
 
 Select **Create from scratch**, name it **Talent Agent**, and give it a short description. Descriptions are used to route a user query to the right agent. You can use the description below:
 ```
 This agent helps match candidates to a job based on their skills
 ```
-![alt text](./hands-on-lab-assets/agent_description.png)
+![alt text](./assets/agent_description.png)
 
 After clicking **Create**, you will be taken to this screen:
 
-![alt text](./hands-on-lab-assets/talent_agent_intro.png)
+![alt text](./assets/talent_agent_intro.png)
 
 For this agent, we will use the **llama-3-405b-instruct** model. You can select it in the **Model** drop-down:
 
-![alt text](./hands-on-lab-assets/agent_change_model.png)
+![alt text](./assets/agent_change_model.png)
 
 Feel free to experiment with the other (vision) model too, but this one worked better for our use case.
 
 We will leave all the other settings at default values for now.  Scroll down to the **Toolset** section. This is where we will be adding our flow (agentic workflow).  Click on **Add Tool**:
 
-![alt text](./hands-on-lab-assets/add_tool.png)
+![alt text](./assets/add_tool.png)
 
 Select **Create an agentic workflow**:
 
-![alt text](./hands-on-lab-assets/create_workflow.png)
+![alt text](./assets/create_workflow.png)
 
 ### Step 1: Create an agentic workflow and configure inputs and outputs
 
 First, we will edit the flow description, input, and outputs.  Click on the pencil next to the name of the flow in the top left corner: 
 
-![alt text](./hands-on-lab-assets/edit_flow_description.png)
+![alt text](./assets/edit_flow_description.png)
 
 Change the name to **Match candidates**, change description to: 
 
@@ -109,23 +109,23 @@ Extracts skills from candidates' resumes, extracts skills from a job description
 ```
 and click on the **Add output** button to specify the output of the flow: 
 
-![alt text](./hands-on-lab-assets/flow_description.png)
+![alt text](./assets/flow_description.png)
 
 This is where we will configure the variable that will store the output of the whole flow, returned to the agent after the flow is done running.  Select **String** for the type of variable: 
 
-![alt text](./hands-on-lab-assets/select_string_output.png)
+![alt text](./assets/select_string_output.png)
 
 Give it a name e.g. **match_summary** and click **Add**: 
 
-![alt text](./hands-on-lab-assets/match_summary_var.png)
+![alt text](./assets/match_summary_var.png)
 
 After you click on **Save**, your flow show look similar to: 
 
-![alt text](./hands-on-lab-assets/flow_start.png)
+![alt text](./assets/flow_start.png)
 
 The flow has two nodes only for now - the start node with 0 inputs and 0 variables configured, and the end node with 1 variable configured. You can validate that your output variable was added successfully by clicking on the end node: 
 
-![alt text](./hands-on-lab-assets/output_node.png)
+![alt text](./assets/output_node.png)
 
 
 We will next configure a couple flow variables that we can use througout our flow.  We will need two: 
@@ -135,15 +135,15 @@ We will next configure a couple flow variables that we can use througout our flo
 
 Click on the start node and select **Edit** flow variables: 
 
-![alt text](./hands-on-lab-assets/edit_flow_variables.png)
+![alt text](./assets/edit_flow_variables.png)
 
 Add flow variable: 
 
-![alt text](./hands-on-lab-assets/add_flow_var.png)
+![alt text](./assets/add_flow_var.png)
 
 and select **Integer**: 
 
-![alt text](./hands-on-lab-assets/integer_var.png)
+![alt text](./assets/integer_var.png)
 
 Enter the name of the variable, *num_candidates* and a description e.g: 
 
@@ -154,7 +154,7 @@ Check the **List of Integer** option since we will have a list, and click on **A
 
 Add another variable: 
 
-![alt text](./hands-on-lab-assets/add_another_var.png)
+![alt text](./assets/add_another_var.png)
 
 This time make it a String.  Give it the name *candidates* and a simple description e.g.: 
 
@@ -164,25 +164,25 @@ candidate names and skills
 
 Specify the default (starting) value: "" and click **Add**:
 
-![alt text](./hands-on-lab-assets/candidates_var.png)
+![alt text](./assets/candidates_var.png)
 
 Your flow show now look like this: 
 
-![alt text](./hands-on-lab-assets/start_vars_defined.png)
+![alt text](./assets/start_vars_defined.png)
 
 ### Step 2: User activity to collect number of candidates
 
 We will now add our first user activity.  The first activity we are going to create will be to ask the user how many candidates they would like to evaluate for the job.  Hover over the arrow connecting the start node to the end node and click on the **+** sign: 
 
-![alt text](./hands-on-lab-assets/add_user_activity1.png)
+![alt text](./assets/add_user_activity1.png)
 
 Click on **User activity**:
 
-![alt text](./hands-on-lab-assets/select_user_activity.png)
+![alt text](./assets/select_user_activity.png)
 
 Hover over the arrow from Start to End **inside User activity 1**.  Click on **+**, then on **Collect from user**, then on **Number**: 
 
-![alt text](./hands-on-lab-assets/collect_number.png)
+![alt text](./assets/collect_number.png)
 
 Click on **Number 1**, then on the pencil icon to edit the question to display to the user: 
 
@@ -190,11 +190,11 @@ Click on **Number 1**, then on the pencil icon to edit the question to display t
 How many candidates would you like to evaluate?
 ```
 
-![alt text](./hands-on-lab-assets/collect_number2.png)
+![alt text](./assets/collect_number2.png)
 
 Your flow should now look like this: 
 
-![alt text](./hands-on-lab-assets/number_collected.png)
+![alt text](./assets/number_collected.png)
 
 ### Step 3: Code block to store number of candidates
 
@@ -202,11 +202,11 @@ We will now define a node to update the *num_candidates* variable:
 
 Hover over the arrow connecting the user activity to the end node. Click on the **+** sign and then on **Code block**: 
 
-![alt text](./hands-on-lab-assets/add_code_block.png)
+![alt text](./assets/add_code_block.png)
 
 Click on the new code block node, and open code editor: 
 
-![alt text](./hands-on-lab-assets/open_code_editor.png)
+![alt text](./assets/open_code_editor.png)
 
 Enter the folowing code into the editor: 
 
@@ -217,15 +217,15 @@ flow.private.num_candidates = list(range(0, numc))
 
 And click on the **X** to close the editor: 
 
-![alt text](./hands-on-lab-assets/enter_code.png)
+![alt text](./assets/enter_code.png)
 
 Click on the code block again and rename it using the Edit button (pencil):
 
-![alt text](./hands-on-lab-assets/edit_code_block_name.png)
+![alt text](./assets/edit_code_block_name.png)
 
 Name it **store candidate list** and click **V** to save.  Your flow should now look like the following: 
 
-![alt text](./hands-on-lab-assets/flow_with_code_block.png)
+![alt text](./assets/flow_with_code_block.png)
 
 ### Step 4: For each loop to upload candidates resumes
 
@@ -233,13 +233,13 @@ We will next create a **for-each loop** to upload each resume, extract the name 
 
 Hover over the arrow connecting the code block to the end node and click on the **+** sign, then select **For each**: 
 
-![alt text](./hands-on-lab-assets/create_for_each.png)
+![alt text](./assets/create_for_each.png)
 
 ### Step 5: Display message to upload a resume
 
 Inside the **For each** node, create a **User activity** by hovering over the arrow inside the **For each** node and clicking on the **+** sign. Next, hover over the inside of the **User activity**, click on **+**, select **Display to user**, then **Message**:
 
-![alt text](./hands-on-lab-assets/add_display_message.png)
+![alt text](./assets/add_display_message.png)
 
 Next click on **Message** and edit the **Output message**:
 
@@ -255,22 +255,22 @@ At the same time change the node name to:
 Prompt user to upload resume
 ```
 
-![alt text](./hands-on-lab-assets/upload_resume_message.png)
+![alt text](./assets/upload_resume_message.png)
 
 
 ### Step 6: File upload
 
 Add another **User Activity**:
 
-![alt text](./hands-on-lab-assets/add_another_user_activity.png)
+![alt text](./assets/add_another_user_activity.png)
 
 This time it will be a **File Upload** activity: 
 
-![alt text](./hands-on-lab-assets/create_file_upload.png)
+![alt text](./assets/create_file_upload.png)
 
 Click on the new *File upload** node and rename it to **Upload resume**: 
 
-![alt text](./hands-on-lab-assets/rename_file_upload.png)
+![alt text](./assets/rename_file_upload.png)
 
 ### Step 7: Document extractor for resumes
 
@@ -278,37 +278,37 @@ Next we will create a document extraction node to extract the candidate's name a
 
 Still inside the **For all** loop, hover over the last arrow and click on **+** to create a new **Document extractor** node: 
 
-![alt text](./hands-on-lab-assets/create_doc_extractor.png)
+![alt text](./assets/create_doc_extractor.png)
 
 Click on the **Document extractor** node and then **Edit fields**: 
 
-![alt text](./hands-on-lab-assets/edit_doc_extractor_fields.png)
+![alt text](./assets/edit_doc_extractor_fields.png)
 
 We will now upload one of the resumes as a sample to train the document extractor.  Drag and drop the [Candidate2.pdf](../data/Candidate%202.pdf) file you downloaded earlier in the lab: 
 
 Once the document is done uploading, you will see the following screen. Click on **Add field** to start adding fields we want to extract and train the document extractor on: 
 
-![alt text](./hands-on-lab-assets/doc_extractor_show.png)
+![alt text](./assets/doc_extractor_show.png)
 
 Enter **Name** for the name of the field and hit Enter.  The document extractor will try to extract the name from the resume and will display it once ready: 
 
-![alt text](./hands-on-lab-assets/candidate_name.png)
+![alt text](./assets/candidate_name.png)
 
 Next we need to add another field **Skills**. Add one more field and name it **Skills**. Once you hit Enter, the document extractor will populate the field from the document: 
 
-![alt text](./hands-on-lab-assets/candidate_skills.png)
+![alt text](./assets/candidate_skills.png)
 
 Rename the document extractor node to **Resume extractor** by clicking on it and editing it's name
 
 Your **For each** loop should now look like this: 
 
-![alt text](./hands-on-lab-assets/for_each_after_extractor.png)
+![alt text](./assets/for_each_after_extractor.png)
 
 ### Step 8: Store candidate's name and skills for later
 
 The last activity we need to create in the **For each** loop is another code block that stores the candidate's name and skills after each iteration:
 
-![alt text](./hands-on-lab-assets/store_candidate_info.png)
+![alt text](./assets/store_candidate_info.png)
 
 Click on the code block and open the code editor. Enter the following in the code editor: 
 
@@ -317,7 +317,7 @@ flow.private.candidates += "Name: " + str(flow["For each 1"]["Resume extractor"]
 ```
 Rename the code block to **Update candidates**. The **For each** should now look like this: 
 
-![alt text](./hands-on-lab-assets/for_each_final.png)
+![alt text](./assets/for_each_final.png)
 
 ### Step 9: Display a message to upload a job description
 
@@ -325,11 +325,11 @@ Next we will ask the user to upload a job description.  First we will display a 
 
 **Below** the **For each** loop, click on the arrow connecting to the end node and add a **User activity**: 
 
-![alt text](./hands-on-lab-assets/add_user_activity_job.png)
+![alt text](./assets/add_user_activity_job.png)
 
 Click inside the user activity and select **Display to user** then **Message**: 
 
-![alt text](./hands-on-lab-assets/display_to_user_job_upload.png)
+![alt text](./assets/display_to_user_job_upload.png)
 
 Update the **Output message** to: 
 
@@ -343,13 +343,13 @@ And change the **Display message** (name of the node in the flow) to:
 Prompt user to upload job description
 ```
 
-![alt text](./hands-on-lab-assets/configure_display_to_user_job_upload.png)
+![alt text](./assets/configure_display_to_user_job_upload.png)
 
 ### Step 10: Upload the job description
 
 Add another **User activity** right before the end node.  This time make it of type **File upload**: 
 
-![alt text](./hands-on-lab-assets/file_upload_job.png)
+![alt text](./assets/file_upload_job.png)
 
 Click on the newly created file upload node and change its' name to: 
 
@@ -357,7 +357,7 @@ Click on the newly created file upload node and change its' name to:
 Upload job description
 ```
 
-![alt text](./hands-on-lab-assets/change_file_upload_job_node_name.png)
+![alt text](./assets/change_file_upload_job_node_name.png)
 
 ### Step 11: Document extractor for job skills
 
@@ -365,15 +365,15 @@ Next we will create another document extractor node to extract required and pref
 
 Add a **Document extractor** node before the end of the flow and rename it as **Extract job skills**: 
 
-![alt text](./hands-on-lab-assets/extract_job_skills.png)
+![alt text](./assets/extract_job_skills.png)
 
 Edit the fields of this document extractor node and drag and drop [the job description file](../data/Job%20Description.pdf) that you downloaded earlier: 
 
-![alt text](./hands-on-lab-assets/job_file_drag_drop.png)
+![alt text](./assets/job_file_drag_drop.png)
 
 Once the document has been processed, you will see the following screen: 
 
-![alt text](./hands-on-lab-assets/job_desc_doc_proc.png)
+![alt text](./assets/job_desc_doc_proc.png)
 
 Add two fields, similar to what you did for the resume extractor. This time, however, add fields **required** and **preferred** to extract required and preferred skills: 
 
@@ -385,11 +385,11 @@ We are finally almost at the end of the flow. We still need to implement a Gener
 
 Add a **Generate prompt** node at the end of the flow (before the end node): 
 
-![alt text](./hands-on-lab-assets/generative_prompt.png)
+![alt text](./assets/generative_prompt.png)
 
 Rename the node to **Match candidate skills to job skills** and edit **Prompt settings**: 
 
-![alt text](./hands-on-lab-assets/rename_prompt_node.png)
+![alt text](./assets/rename_prompt_node.png)
 
 For system prompt enter the following: 
 
@@ -413,15 +413,15 @@ We can also provide a sample test value for each variable so we can run the prom
 
 Add the following _String_ input variables: *candidates*, *job_required*, and *job_preferred* and assign some test values e.g.: 
 
-![alt text](./hands-on-lab-assets/create_new_var_gp.png)
+![alt text](./assets/create_new_var_gp.png)
 
 Fill in the name of the var and add a simple description: 
 
-![alt text](./hands-on-lab-assets/create_candidates_var_gp.png)
+![alt text](./assets/create_candidates_var_gp.png)
 
 Edit the var to add a test value: 
 
-![alt text](./hands-on-lab-assets/add_test_value.png)
+![alt text](./assets/add_test_value.png)
 
 Paste the following text to add the value: 
 
@@ -435,61 +435,61 @@ Skills: Java, Python, Javascript, ML
 
 Your _candidates_ variable show now look like this:
 
-![alt text](./hands-on-lab-assets/prompt_candidates_var.png)
+![alt text](./assets/prompt_candidates_var.png)
 
 Follow the steps above to add two more _String_ variables, _job_required_ and _job_preferred_: 
 
-![alt text](./hands-on-lab-assets/job_reqs.png)
+![alt text](./assets/job_reqs.png)
 
 Finally reference these variables in your prompt by clicking the **X** sign in the user prompt area: 
 
-![alt text](./hands-on-lab-assets/select_vars.png)
+![alt text](./assets/select_vars.png)
 
 Your prompt should now look like this: 
 
-![alt text](./hands-on-lab-assets/generative_prompt_finished.png)
+![alt text](./assets/generative_prompt_finished.png)
 
 Click on **Generate response** to run the prompt on the test values you provided and observe the results returned: 
 
-![alt text](./hands-on-lab-assets/gen_prompt_test.png)
+![alt text](./assets/gen_prompt_test.png)
 
 As you can see, the result is a table which compares each candidate's skills with the job requirements.  This is exactly what we were looking for, so we have validated that our generative prompt works and can move on to the next step.
 
 Close the prompt definition now, click on the Generative prompt node you just created and **Edit data mapping**: 
 
-![alt text](./hands-on-lab-assets/edit_data_mapping.png)
+![alt text](./assets/edit_data_mapping.png)
 
 We now need to map data collected earlier in the flow to the inputs of the generative prompt.
 
  Click on the **variable** icon in the *candidates* row: 
 
-![alt text](./hands-on-lab-assets/prompt_edit_candidates_input.png)
+![alt text](./assets/prompt_edit_candidates_input.png)
 
 In the editor select **Flow variables -> candidates**: 
 
-![alt text](./hands-on-lab-assets/select_candidates_fv.png)
+![alt text](./assets/select_candidates_fv.png)
 
 For *job_preferred*, also select the **variable icon** and choose **Extract job skills -> preferred**
 
-![alt text](./hands-on-lab-assets/select_job_preferred.png)
+![alt text](./assets/select_job_preferred.png)
 
 Similarly, for *job_required* select the variable icon and chooose **Extract job skills -> required**
 
-![alt text](./hands-on-lab-assets/select_job_required.png)
+![alt text](./assets/select_job_required.png)
 
 ### Step 13: Display match summary - output of generative prompt
 
 Finally, create one last **User activity** node to display the output of the generative prompt: 
 
-![alt text](./hands-on-lab-assets/display_output.png)
+![alt text](./assets/display_output.png)
 
 Update the node name to **Show summary** and click on **Select variable** to select the output message: 
 
-![alt text](./hands-on-lab-assets/edit_output_node.png)
+![alt text](./assets/edit_output_node.png)
 
 In the editor select the generative prompt node name, then select the corresponding output variable *value*:
 
-![alt text](./hands-on-lab-assets/select_prompt_output_var.png)
+![alt text](./assets/select_prompt_output_var.png)
 
 We are finally done defining the flow.  Click on **Done** to close the flow. 
 
@@ -501,7 +501,7 @@ Before testing the agent, let's complete the **Behavior** section. Use the follo
 When asked to match a candidate to job or to recommend the best candidate for a job, call the 'Match candidates' tool.  All other questions should be answered based on the context in the chat.
 ```
 
-![alt text](./hands-on-lab-assets/behavior.png)
+![alt text](./assets/behavior.png)
 
 ### Test the agent
 
@@ -521,14 +521,14 @@ You will finally be asked to upload a job description.  You can use [Job Descrip
 
 The results should look similar to the following: 
 
-![alt text](./hands-on-lab-assets/table_output.png)
+![alt text](./assets/table_output.png)
 
 As you can see, the columns marked with * are skills required by the job.  Other skills are preferred.
 Each candidate row shows which skills the candidate has.
 
 The agent summarizes by telling us who the recommended candidate is: 
 
-![alt text](./hands-on-lab-assets/recommended_candidate.png)
+![alt text](./assets/recommended_candidate.png)
 
 ## Pulling it all together
 
