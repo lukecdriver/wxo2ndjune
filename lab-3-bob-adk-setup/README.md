@@ -1,5 +1,7 @@
 # Lab 3: Setup Bob and watsonx Orchestrate ADK
 
+> **📥 Download Setup Guide:** [IBM i User Group - WxO Bob Setup.pptx](https://github.ibm.com/Luke-Driver/2ndJuneWxOBob/raw/main/assets/IBM%20i%20User%20Group%20-%20WxO%20Bob%20Setup.pptx)
+
 ## 📋 Overview
 
 **Duration:** ~30 minutes  
