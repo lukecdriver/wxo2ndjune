@@ -25,10 +25,12 @@ This repository contains **6 progressive labs** that teach you how to build AI a
 
 ---
 
-### [Lab 2: Build Agentic Flows in the UI for HR Agent](./lab-2-hr-flows-ui/)
-**Duration:** ~60 minutes  
-**Level:** Beginner to Intermediate  
+### [Lab 2: Build Agentic Flows in the UI for HR Agent](./lab-2-hr-flows-ui/) *(Optional)*
+**Duration:** ~60 minutes
+**Level:** Beginner to Intermediate
 **Description:** Extend your HR agent with agentic workflows. Learn to create flows that orchestrate multiple steps, document processing, and business logic.
+
+> **Note:** This lab is optional. You can proceed directly to Lab 3 if you want to focus on programmatic development with Bob.
 
 **What You'll Learn:**
 - Create agentic workflows in the UI
