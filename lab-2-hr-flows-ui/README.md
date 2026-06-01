@@ -1,395 +1,542 @@
-# Lab 2: Build Agentic Flows in the UI for HR Agent
 
-## 📋 Overview
+# 🧑‍💼 Automating Talent Acquisition with Agentic Workflows
 
-**Duration:** ~60 minutes  
-**Level:** Beginner to Intermediate  
-**Prerequisites:** Completion of Lab 1 (HR Agent creation)
+## Table of Contents
 
-In this lab, you'll extend your HR Manager agent with agentic workflows (flows). You'll learn to create multi-step processes that orchestrate tools, LLMs, and business logic to handle complex HR scenarios.
+- [Use Case description](#use-case-description)
+- [Pre-requisites](#pre-requisites)
+- [Talent acquisition agent with agentic workflows](#-talent-acquisition-agent-with-agentic-workflows)
+     - [Create a Talent Agent](#create-a-new-agent)
+     - [Step 1: Create an agentic workflow and configure inputs and outputs](#step-1-create-an-agentic-workflow-and-configure-inputs-and-outputs)
+     - [Step 2: User activity to collect number of candidates](#step-2-user-activity-to-collect-number-of-candidates)
+     - [Step 3: Code block to store number of candidates](#step-3-code-block-to-store-number-of-candidates)
+     - [Step 4: For each loop to upload candidate resumes](#step-4-for-each-loop-to-upload-candidates-resumes)
+     - [Step 5: Display message to upload a resume](#step-5-display-message-to-upload-a-resume)
+     - [Step 6: Resume file upload](#step-6-file-upload)
+     - [Step 7: Document extractor for resumes](#step-7-document-extractor-for-resumes)
+     - [Step 8: Store candidate's name and skills](#step-8-store-candidates-name-and-skills-for-later)
+     - [Step 9: Display a message to upload a job description](#step-9-display-a-message-to-upload-a-job-description)
+     - [Step 10: Upload the job description](#step-10-upload-the-job-description)
+     - [Step 11: Document extractor for job skills](#step-11-document-extractor-for-job-skills)
+     - [Step 12: Generative prompt - match candidates to job](#step-12-generative-prompt---match-candidates-skills-to-job-skills)
+     - [Step 13: Display match summary](#step-13-display-match-summary---output-of-generative-prompt)
+     - [Update the agent behavior](#update-agent-behavior)
+     - [Test the agent](#test-the-agent)
+- [Pulling it all together](#pulling-it-all-together)
 
----
 
-## 🎯 Learning Objectives
+## Use Case Description
 
-By the end of this lab, you will be able to:
+In the [first part of the HR Talent lab](./hands-on-lab-hr-manager.md) you used the **Chat with documents** feature to upload several resumes and a job description.  You then prompted the agent to generate a table comparing candidates' skills to job required skills. In this case the agent's internal LLM does all the work, all that is required from the user is providing the right prompt/query.  However, sometimes it may not be obvious what the right prompt is as HR Managers are not prompt engineers.  Additionally, we may want to program the agent to run some additional steps, e.g. automatically reach out to the selected candidate, ask them to select an interview time, automatically process the response and add it to the calendar. In this case we may want to create an **agentic workflow**. 
 
-1. Understand the concept of agentic flows
-2. Create flows using the watsonx Orchestrate UI
-3. Use different flow nodes (tools, LLM, conditions, user activities)
-4. Connect flows to your HR agent
-5. Implement multi-step HR workflows
-6. Test and debug flows
-7. Handle user inputs and approvals
+An agentic workflow represents a sequence of steps that utilizes conditional controls and activities. Agentic workflows allow us to create sequences of tasks, as well as conditions, branches and loops.  We can use a variety of nodes, including small code blocks, user input, document processing nodes to extract data from documents, and generative prompts to create and configure LLM prompts with inputs and outputs.
 
----
+Rather than handling each step individually, agents can start an angetic workflow to manage the entire process from beginning to end. Agentic workflows are ideal for tasks that require coordination across systems or multiple decision points.
 
-## 🔗 Original Lab Materials
+For example, an agentic workflow can be created to handle employee onboarding: collecting information, creating accounts, sending welcome emails, and notifying internal teams. Once built, this agentic workflow can be reused across departments, triggered by agents whenever a new employee joins —- no need to manually coordinate each step.
 
-This lab is based on the **IBM Agentic AI Client Bootcamp - HR Talent Flows**.
+By using agentic workflows, business users gain:
 
-### 📚 Accessing the Lab
+- Confidence that tasks are completed correctly and consistently.
+- Speed through automation of repetitive steps.
+- Visibility into how processes run and where bottlenecks occur.
+- Scalability to apply the same logic across teams, regions, or products.
 
-**Original Source:** IBM Agentic AI Client Bootcamp  
-**Repository:** github.ibm.com/skol/agentic-ai-client-bootcamp  
-**Use Case:** HR Talent Management - Flows  
-**Lab File:** `usecases/hr-talent/assets/hands-on-lab-hr-manager-flows.md`
+## Pre-requisites
 
-**To access the original lab materials:**
+If you haven't yet as part of the earlier steps of the HR Manager lab, download the following files: 
 
-1. **If you have IBM GitHub access:**
-   ```bash
-   git clone git@github.ibm.com:skol/agentic-ai-client-bootcamp.git
-   cd agentic-ai-client-bootcamp/usecases/hr-talent/assets
-   # Open hands-on-lab-hr-manager-flows.md
-   ```
+[Candidate 1.pdf](../data/Candidate%201.pdf)
 
-2. **If you don't have access:**
-   - Contact your IBM representative or bootcamp coordinator
-   - Request access to the Agentic AI Client Bootcamp materials
-   - Alternative: Follow the general guidance below
+[Candidate 2.pdf](../data/Candidate%202.pdf)
 
----
+[Candidate 3.pdf](../data/Candidate%203.pdf)
 
-## 🚀 Lab Overview (General Guidance)
+[Job Description.pdf](../data/Job%20Description.pdf)
 
-### What You'll Create
+## 🥇 Talent Acquisition Agent with agentic workflows 
 
-**HR Agentic Workflows** that can:
-- Process leave requests with approval workflows
-- Handle benefits enrollment multi-step processes
-- Automate document processing (e.g., expense reports, forms)
-- Implement conditional logic based on employee data
-- Collect structured information from users
+In this part of the lab we will implement the following workflow: 
 
-### Example Workflows
+![alt text](./hands-on-lab-assets/flow_to_build.jpeg)
 
-1. **Leave Request Flow**
-   - Collect leave details from employee
-   - Check leave balance
-   - Route to appropriate approver
-   - Send confirmation
+We will now walk you through creating the above workflow step by step.  We will first create a separate agent to experiment. 
 
-2. **Benefits Enrollment Flow**
-   - Guide employee through options
-   - Collect selections
-   - Validate eligibility
-   - Submit enrollment
+### Create a new agent
 
-3. **Document Processing Flow**
-   - Accept document upload
-   - Extract information
-   - Validate data
-   - Route for approval
+Open the Agent Builder in watsonx Orchestrate, if you aren't there already -- click on **Build->Agent Builder** in the main hamburger menu. 
 
----
+![alt text](./hands-on-lab-assets/open_agent_builder.png)
 
-## 🛠️ Prerequisites
+Create a new agent:
 
-Before starting this lab, ensure you have:
+![alt text](./hands-on-lab-assets/create_new_agent.png)
 
-### 1. Completed Lab 1
-- ✅ HR Manager agent created and tested
-- ✅ Familiar with watsonx Orchestrate UI
-- ✅ Understanding of agent basics
-
-### 2. watsonx Orchestrate Access
-- ✅ Flow creation permissions
-- ✅ Access to flow builder UI
-- ✅ Ability to test flows
-
-### 3. Optional Components
-- Document processing capabilities (for document flows)
-- External system connections (for integration flows)
-- Approval routing setup
-
----
-
-## 📖 General Steps (High-Level)
-
-### Step 1: Access Flow Builder
-1. Log in to watsonx Orchestrate
-2. Navigate to Flows section
-3. Click "Create New Flow"
-
-### Step 2: Design Your Flow
-1. **Define flow purpose:** What problem does it solve?
-2. **Map the process:** Identify all steps
-3. **Identify inputs:** What information is needed?
-4. **Define outputs:** What should the flow return?
-
-### Step 3: Build Flow Nodes
-
-#### Common Node Types
-
-**1. Start Node**
-- Entry point for the flow
-- Defines input parameters
-
-**2. Tool Nodes**
-- Call Python tools or functions
-- Integrate with external systems
-- Process data
-
-**3. LLM Nodes**
-- Generate text responses
-- Analyze information
-- Make decisions
-
-**4. User Activity Nodes**
-- Collect user input
-- Display forms
-- Request approvals
-
-**5. Condition Nodes**
-- Implement if/else logic
-- Route based on data
-- Handle different scenarios
-
-**6. End Node**
-- Exit point for the flow
-- Returns results
-
-### Step 4: Connect Nodes
-1. Drag and drop nodes onto canvas
-2. Connect nodes in sequence
-3. Map data between nodes
-4. Configure node parameters
-
-### Step 5: Test Your Flow
-1. Use flow tester
-2. Provide sample inputs
-3. Verify each step executes correctly
-4. Check output format
-
-### Step 6: Connect to Agent
-1. Save and publish flow
-2. Add flow as tool to HR agent
-3. Update agent instructions to use flow
-4. Test end-to-end
-
----
-
-## 💡 Flow Design Patterns
-
-### Pattern 1: Linear Workflow
+Select **Create from scratch**, name it **Talent Agent**, and give it a short description. Descriptions are used to route a user query to the right agent. You can use the description below:
 ```
-START → Collect Info → Process → Validate → END
+This agent helps match candidates to a job based on their skills
 ```
-**Use Case:** Simple data collection and processing
+![alt text](./hands-on-lab-assets/agent_description.png)
 
-### Pattern 2: Conditional Workflow
+After clicking **Create**, you will be taken to this screen:
+
+![alt text](./hands-on-lab-assets/talent_agent_intro.png)
+
+For this agent, we will use the **llama-3-405b-instruct** model. You can select it in the **Model** drop-down:
+
+![alt text](./hands-on-lab-assets/agent_change_model.png)
+
+Feel free to experiment with the other (vision) model too, but this one worked better for our use case.
+
+We will leave all the other settings at default values for now.  Scroll down to the **Toolset** section. This is where we will be adding our flow (agentic workflow).  Click on **Add Tool**:
+
+![alt text](./hands-on-lab-assets/add_tool.png)
+
+Select **Create an agentic workflow**:
+
+![alt text](./hands-on-lab-assets/create_workflow.png)
+
+### Step 1: Create an agentic workflow and configure inputs and outputs
+
+First, we will edit the flow description, input, and outputs.  Click on the pencil next to the name of the flow in the top left corner: 
+
+![alt text](./hands-on-lab-assets/edit_flow_description.png)
+
+Change the name to **Match candidates**, change description to: 
+
 ```
-START → Check Condition → [If True] → Action A → END
-                       → [If False] → Action B → END
+Extracts skills from candidates' resumes, extracts skills from a job description, and generates a summary table showing which candidates have which skills required and preferred for the job.
 ```
-**Use Case:** Different paths based on criteria
+and click on the **Add output** button to specify the output of the flow: 
 
-### Pattern 3: Approval Workflow
+![alt text](./hands-on-lab-assets/flow_description.png)
+
+This is where we will configure the variable that will store the output of the whole flow, returned to the agent after the flow is done running.  Select **String** for the type of variable: 
+
+![alt text](./hands-on-lab-assets/select_string_output.png)
+
+Give it a name e.g. **match_summary** and click **Add**: 
+
+![alt text](./hands-on-lab-assets/match_summary_var.png)
+
+After you click on **Save**, your flow show look similar to: 
+
+![alt text](./hands-on-lab-assets/flow_start.png)
+
+The flow has two nodes only for now - the start node with 0 inputs and 0 variables configured, and the end node with 1 variable configured. You can validate that your output variable was added successfully by clicking on the end node: 
+
+![alt text](./hands-on-lab-assets/output_node.png)
+
+
+We will next configure a couple flow variables that we can use througout our flow.  We will need two: 
+
+- *num_candidates* - a list that represents a range of integers *0* to *n* where *n* is the number of candidates To upload and process multiple candidate resumes, we will use a **For each** node.  In order to do this, we can iteratate over *num_candidates*
+- *candidates* - this is a string variable that will hold extracted candidates' names and corresponding skills. We will need it so we can use it in a generative prompt node
+
+Click on the start node and select **Edit** flow variables: 
+
+![alt text](./hands-on-lab-assets/edit_flow_variables.png)
+
+Add flow variable: 
+
+![alt text](./hands-on-lab-assets/add_flow_var.png)
+
+and select **Integer**: 
+
+![alt text](./hands-on-lab-assets/integer_var.png)
+
+Enter the name of the variable, *num_candidates* and a description e.g: 
+
 ```
-START → Submit Request → Route to Approver → 
-        Wait for Approval → [Approved] → Process → END
-                         → [Rejected] → Notify → END
+list of candidates, enum
 ```
-**Use Case:** Requests requiring approval
+Check the **List of Integer** option since we will have a list, and click on **Add** to add the variable.
 
-### Pattern 4: Document Processing
+Add another variable: 
+
+![alt text](./hands-on-lab-assets/add_another_var.png)
+
+This time make it a String.  Give it the name *candidates* and a simple description e.g.: 
+
 ```
-START → Upload Document → Extract Data → 
-        Validate → [Valid] → Process → END
-                → [Invalid] → Request Correction → END
-```
-**Use Case:** Form or document processing
-
----
-
-## 🎨 Example Flow: Leave Request
-
-### Flow Structure
-
-```mermaid
-flowchart TD
-    Start([START]) --> Collect[Collect Leave Details]
-    Collect --> Check[Check Leave Balance]
-    Check --> HasBalance{Has Balance?}
-    HasBalance -->|Yes| Route[Route to Manager]
-    HasBalance -->|No| Deny[Deny Request]
-    Route --> Approve{Approved?}
-    Approve -->|Yes| Confirm[Send Confirmation]
-    Approve -->|No| Notify[Notify Employee]
-    Confirm --> End([END])
-    Deny --> End
-    Notify --> End
+candidate names and skills
 ```
 
-### Node Configuration
+Specify the default (starting) value: "" and click **Add**:
 
-**1. Collect Leave Details (User Activity)**
-```yaml
-Node Type: User Activity
-Fields:
-  - Leave Type: dropdown (Vacation, Sick, Personal)
-  - Start Date: date picker
-  - End Date: date picker
-  - Reason: text area
+![alt text](./hands-on-lab-assets/candidates_var.png)
+
+Your flow show now look like this: 
+
+![alt text](./hands-on-lab-assets/start_vars_defined.png)
+
+### Step 2: User activity to collect number of candidates
+
+We will now add our first user activity.  The first activity we are going to create will be to ask the user how many candidates they would like to evaluate for the job.  Hover over the arrow connecting the start node to the end node and click on the **+** sign: 
+
+![alt text](./hands-on-lab-assets/add_user_activity1.png)
+
+Click on **User activity**:
+
+![alt text](./hands-on-lab-assets/select_user_activity.png)
+
+Hover over the arrow from Start to End **inside User activity 1**.  Click on **+**, then on **Collect from user**, then on **Number**: 
+
+![alt text](./hands-on-lab-assets/collect_number.png)
+
+Click on **Number 1**, then on the pencil icon to edit the question to display to the user: 
+
+```
+How many candidates would you like to evaluate?
 ```
 
-**2. Check Leave Balance (Tool)**
-```yaml
-Node Type: Tool
-Tool: check_leave_balance
-Input: employee_id, leave_type
-Output: available_days, requested_days
+![alt text](./hands-on-lab-assets/collect_number2.png)
+
+Your flow should now look like this: 
+
+![alt text](./hands-on-lab-assets/number_collected.png)
+
+### Step 3: Code block to store number of candidates
+
+We will now define a node to update the *num_candidates* variable: 
+
+Hover over the arrow connecting the user activity to the end node. Click on the **+** sign and then on **Code block**: 
+
+![alt text](./hands-on-lab-assets/add_code_block.png)
+
+Click on the new code block node, and open code editor: 
+
+![alt text](./hands-on-lab-assets/open_code_editor.png)
+
+Enter the folowing code into the editor: 
+
+```
+numc = flow["User activity 1"]["How many candidates would you like to evaluate?"].output.value
+flow.private.num_candidates = list(range(0, numc))
 ```
 
-**3. Has Balance? (Condition)**
-```yaml
-Node Type: Condition
-Expression: available_days >= requested_days
-True Path: Route to Manager
-False Path: Deny Request
+And click on the **X** to close the editor: 
+
+![alt text](./hands-on-lab-assets/enter_code.png)
+
+Click on the code block again and rename it using the Edit button (pencil):
+
+![alt text](./hands-on-lab-assets/edit_code_block_name.png)
+
+Name it **store candidate list** and click **V** to save.  Your flow should now look like the following: 
+
+![alt text](./hands-on-lab-assets/flow_with_code_block.png)
+
+### Step 4: For each loop to upload candidates resumes
+
+We will next create a **for-each loop** to upload each resume, extract the name of the candidate and their skills, and store all this info in the *candidates* variable. 
+
+Hover over the arrow connecting the code block to the end node and click on the **+** sign, then select **For each**: 
+
+![alt text](./hands-on-lab-assets/create_for_each.png)
+
+### Step 5: Display message to upload a resume
+
+Inside the **For each** node, create a **User activity** by hovering over the arrow inside the **For each** node and clicking on the **+** sign. Next, hover over the inside of the **User activity**, click on **+**, select **Display to user**, then **Message**:
+
+![alt text](./hands-on-lab-assets/add_display_message.png)
+
+Next click on **Message** and edit the **Output message**:
+
+```
+Please upload a candidate's resume
 ```
 
-**4. Route to Manager (Tool)**
-```yaml
-Node Type: Tool
-Tool: send_approval_request
-Input: manager_id, leave_details
-Output: approval_status
+This is what will be displayed to the user to ask them to upload a resume.
+
+At the same time change the node name to: 
+
+```
+Prompt user to upload resume
 ```
 
----
+![alt text](./hands-on-lab-assets/upload_resume_message.png)
 
-## 🔍 Common Flow Scenarios
 
-### Scenario 1: Benefits Enrollment
-**Steps:**
-1. Display available benefits
-2. Collect employee selections
-3. Calculate costs
-4. Confirm choices
-5. Submit enrollment
+### Step 6: File upload
 
-### Scenario 2: Expense Report
-**Steps:**
-1. Upload receipt/document
-2. Extract expense details
-3. Validate against policy
-4. Route for approval
-5. Process reimbursement
+Add another **User Activity**:
 
-### Scenario 3: Onboarding Workflow
-**Steps:**
-1. Collect new hire information
-2. Create accounts
-3. Assign equipment
-4. Schedule training
-5. Send welcome package
+![alt text](./hands-on-lab-assets/add_another_user_activity.png)
 
-### Scenario 4: Performance Review
-**Steps:**
-1. Collect self-assessment
-2. Gather peer feedback
-3. Manager review
-4. Generate report
-5. Schedule discussion
+This time it will be a **File Upload** activity: 
 
----
+![alt text](./hands-on-lab-assets/create_file_upload.png)
 
-## 🐛 Troubleshooting
+Click on the new *File upload** node and rename it to **Upload resume**: 
 
-### Flow Not Executing
-- **Check Connections:** Ensure all nodes are properly connected
-- **Verify Inputs:** Confirm required inputs are provided
-- **Test Individually:** Test each node separately
-- **Review Logs:** Check execution logs for errors
+![alt text](./hands-on-lab-assets/rename_file_upload.png)
 
-### Data Not Passing Between Nodes
-- **Check Mappings:** Verify data mapping configuration
-- **Output Format:** Ensure output matches expected input
-- **Variable Names:** Check variable naming consistency
-- **Type Matching:** Verify data types match
+### Step 7: Document extractor for resumes
 
-### Condition Not Working
-- **Expression Syntax:** Check condition expression syntax
-- **Data Availability:** Ensure data exists before condition
-- **Type Comparison:** Verify comparing compatible types
-- **Test Values:** Use known values to test logic
+Next we will create a document extraction node to extract the candidate's name and skills from their resume. 
 
-### User Activity Issues
-- **Form Fields:** Verify all required fields are defined
-- **Validation:** Check field validation rules
-- **Display:** Test form rendering
-- **Submission:** Verify form submission handling
+Still inside the **For all** loop, hover over the last arrow and click on **+** to create a new **Document extractor** node: 
 
----
+![alt text](./hands-on-lab-assets/create_doc_extractor.png)
 
-## ✅ Lab Completion Checklist
+Click on the **Document extractor** node and then **Edit fields**: 
 
-- [ ] Accessed flow builder UI
-- [ ] Created at least one HR workflow
-- [ ] Used multiple node types (tool, LLM, condition, user activity)
-- [ ] Implemented conditional logic
-- [ ] Tested flow with sample data
-- [ ] Connected flow to HR agent
-- [ ] Updated agent instructions
-- [ ] Tested end-to-end workflow
-- [ ] Documented flow design
+![alt text](./hands-on-lab-assets/edit_doc_extractor_fields.png)
 
----
+We will now upload one of the resumes as a sample to train the document extractor.  Drag and drop the [Candidate2.pdf](../data/Candidate%202.pdf) file you downloaded earlier in the lab: 
 
-## 🎓 What's Next?
+Once the document is done uploading, you will see the following screen. Click on **Add field** to start adding fields we want to extract and train the document extractor on: 
 
-After completing this lab, you're ready to transition to programmatic development:
+![alt text](./hands-on-lab-assets/doc_extractor_show.png)
 
-**[Lab 3: Use Bob to Build a Custom Agent](../lab-3-bob-custom-agent/)**
+Enter **Name** for the name of the field and hit Enter.  The document extractor will try to extract the name from the resume and will display it once ready: 
 
-In Lab 3, you'll learn to:
-- Use Bob for code generation
-- Create agents programmatically
-- Work with the watsonx Orchestrate ADK
-- Version control your agents
+![alt text](./hands-on-lab-assets/candidate_name.png)
 
----
+Next we need to add another field **Skills**. Add one more field and name it **Skills**. Once you hit Enter, the document extractor will populate the field from the document: 
 
-## 📚 Additional Resources
+![alt text](./hands-on-lab-assets/candidate_skills.png)
 
-### watsonx Orchestrate Documentation
-- [Flow Builder Guide](https://www.ibm.com/docs/en/watsonx/watson-orchestrate)
-- [Flow Node Reference](https://www.ibm.com/docs/en/watsonx/watson-orchestrate)
-- [Best Practices for Flows](https://www.ibm.com/docs/en/watsonx/watson-orchestrate)
+Rename the document extractor node to **Resume extractor** by clicking on it and editing it's name
 
-### Flow Design Resources
-- Workflow design patterns
-- Business process modeling
-- User experience in flows
-- Error handling strategies
+Your **For each** loop should now look like this: 
 
----
+![alt text](./hands-on-lab-assets/for_each_after_extractor.png)
 
-## 🤝 Credits
+### Step 8: Store candidate's name and skills for later
 
-**Original Lab Author:** IBM Skills Academy Team  
-**Source:** IBM Agentic AI Client Bootcamp  
-**Repository:** github.ibm.com/skol/agentic-ai-client-bootcamp  
-**Use Case:** HR Talent Management - Flows
+The last activity we need to create in the **For each** loop is another code block that stores the candidate's name and skills after each iteration:
 
-This guide provides general guidance for the lab. For detailed step-by-step instructions with screenshots, please access the original lab materials from the IBM Agentic AI Client Bootcamp.
+![alt text](./hands-on-lab-assets/store_candidate_info.png)
 
----
+Click on the code block and open the code editor. Enter the following in the code editor: 
 
-## 📧 Support
+```
+flow.private.candidates += "Name: " + str(flow["For each 1"]["Resume extractor"].output.name) + "\n\nSkills: " + str(flow["For each 1"]["Resume extractor"].output.skills) + "\n\n"
+```
+Rename the code block to **Update candidates**. The **For each** should now look like this: 
 
-**For Lab Access:**
-- Contact your IBM representative
-- Request bootcamp materials access
-- Join the IBM Skills Academy program
+![alt text](./hands-on-lab-assets/for_each_final.png)
 
-**For Technical Issues:**
-- Check watsonx Orchestrate documentation
-- Contact watsonx support
-- Review the [main README](../README.md)
+### Step 9: Display a message to upload a job description
 
----
+Next we will ask the user to upload a job description.  First we will display a message to the user, then we will add a file upload activity. 
 
-**Ready to build powerful workflows? Let's create some flows! 🚀**
+**Below** the **For each** loop, click on the arrow connecting to the end node and add a **User activity**: 
+
+![alt text](./hands-on-lab-assets/add_user_activity_job.png)
+
+Click inside the user activity and select **Display to user** then **Message**: 
+
+![alt text](./hands-on-lab-assets/display_to_user_job_upload.png)
+
+Update the **Output message** to: 
+
+```
+Please upload the job description
+```
+
+And change the **Display message** (name of the node in the flow) to: 
+
+```
+Prompt user to upload job description
+```
+
+![alt text](./hands-on-lab-assets/configure_display_to_user_job_upload.png)
+
+### Step 10: Upload the job description
+
+Add another **User activity** right before the end node.  This time make it of type **File upload**: 
+
+![alt text](./hands-on-lab-assets/file_upload_job.png)
+
+Click on the newly created file upload node and change its' name to: 
+
+```
+Upload job description
+```
+
+![alt text](./hands-on-lab-assets/change_file_upload_job_node_name.png)
+
+### Step 11: Document extractor for job skills
+
+Next we will create another document extractor node to extract required and preferred skills from the job description. 
+
+Add a **Document extractor** node before the end of the flow and rename it as **Extract job skills**: 
+
+![alt text](./hands-on-lab-assets/extract_job_skills.png)
+
+Edit the fields of this document extractor node and drag and drop [the job description file](../data/Job%20Description.pdf) that you downloaded earlier: 
+
+![alt text](./hands-on-lab-assets/job_file_drag_drop.png)
+
+Once the document has been processed, you will see the following screen: 
+
+![alt text](./hands-on-lab-assets/job_desc_doc_proc.png)
+
+Add two fields, similar to what you did for the resume extractor. This time, however, add fields **required** and **preferred** to extract required and preferred skills: 
+
+Close the extractor node once done. 
+
+### Step 12: Generative prompt - match candidates' skills to job skills
+
+We are finally almost at the end of the flow. We still need to implement a Generative prompt.  This prompt will take as input the value of *candidates* variable, which is a string that contains by now all candidate names and their skills.  It will also take as input the required and preferred skills just extracted from the job description. The prompt will compare the skills of each candidate to the skills required by the job and generate a table which summarizes how well candidate skills map to the job description.
+
+Add a **Generate prompt** node at the end of the flow (before the end node): 
+
+![alt text](./hands-on-lab-assets/generative_prompt.png)
+
+Rename the node to **Match candidate skills to job skills** and edit **Prompt settings**: 
+
+![alt text](./hands-on-lab-assets/rename_prompt_node.png)
+
+For system prompt enter the following: 
+
+```
+You are a helpful assistant who can match candidates skills to job requirements.
+```
+
+For user prompt enter: 
+
+```
+Make a table where each row is a candidate and each column is a skill in the job description. Do not invent any candidates. Have the check emoji if the candidate does have the corresponding skill. Mark columns for required job skills with *. Include the candidate's name in each row.
+
+Candidate names and skills: 
+Required job skills: 
+Preferred job skills:
+```
+
+In order to work, our generative prompt will need to take **as input** a string that contains candidate names and skills extracted earlier in the flow. It will also need two strings for skills (required and preferred) from the job description itself. Therefore, we need to create three _String_ input varilables that will hold these values and that we can reference in the user prompt as variables. 
+
+We can also provide a sample test value for each variable so we can run the prompt directly in the generative prompt editor and double check that the output is as expected, without having to quit and run the whole flow. 
+
+Add the following _String_ input variables: *candidates*, *job_required*, and *job_preferred* and assign some test values e.g.: 
+
+![alt text](./hands-on-lab-assets/create_new_var_gp.png)
+
+Fill in the name of the var and add a simple description: 
+
+![alt text](./hands-on-lab-assets/create_candidates_var_gp.png)
+
+Edit the var to add a test value: 
+
+![alt text](./hands-on-lab-assets/add_test_value.png)
+
+Paste the following text to add the value: 
+
+```
+Name: Jane Smith
+Skills: Java, Javascript
+
+Name: John Doe
+Skills: Java, Python, Javascript, ML
+```
+
+Your _candidates_ variable show now look like this:
+
+![alt text](./hands-on-lab-assets/prompt_candidates_var.png)
+
+Follow the steps above to add two more _String_ variables, _job_required_ and _job_preferred_: 
+
+![alt text](./hands-on-lab-assets/job_reqs.png)
+
+Finally reference these variables in your prompt by clicking the **X** sign in the user prompt area: 
+
+![alt text](./hands-on-lab-assets/select_vars.png)
+
+Your prompt should now look like this: 
+
+![alt text](./hands-on-lab-assets/generative_prompt_finished.png)
+
+Click on **Generate response** to run the prompt on the test values you provided and observe the results returned: 
+
+![alt text](./hands-on-lab-assets/gen_prompt_test.png)
+
+As you can see, the result is a table which compares each candidate's skills with the job requirements.  This is exactly what we were looking for, so we have validated that our generative prompt works and can move on to the next step.
+
+Close the prompt definition now, click on the Generative prompt node you just created and **Edit data mapping**: 
+
+![alt text](./hands-on-lab-assets/edit_data_mapping.png)
+
+We now need to map data collected earlier in the flow to the inputs of the generative prompt.
+
+ Click on the **variable** icon in the *candidates* row: 
+
+![alt text](./hands-on-lab-assets/prompt_edit_candidates_input.png)
+
+In the editor select **Flow variables -> candidates**: 
+
+![alt text](./hands-on-lab-assets/select_candidates_fv.png)
+
+For *job_preferred*, also select the **variable icon** and choose **Extract job skills -> preferred**
+
+![alt text](./hands-on-lab-assets/select_job_preferred.png)
+
+Similarly, for *job_required* select the variable icon and chooose **Extract job skills -> required**
+
+![alt text](./hands-on-lab-assets/select_job_required.png)
+
+### Step 13: Display match summary - output of generative prompt
+
+Finally, create one last **User activity** node to display the output of the generative prompt: 
+
+![alt text](./hands-on-lab-assets/display_output.png)
+
+Update the node name to **Show summary** and click on **Select variable** to select the output message: 
+
+![alt text](./hands-on-lab-assets/edit_output_node.png)
+
+In the editor select the generative prompt node name, then select the corresponding output variable *value*:
+
+![alt text](./hands-on-lab-assets/select_prompt_output_var.png)
+
+We are finally done defining the flow.  Click on **Done** to close the flow. 
+
+### Update Agent Behavior
+
+Before testing the agent, let's complete the **Behavior** section. Use the following instructions: 
+
+```
+When asked to match a candidate to job or to recommend the best candidate for a job, call the 'Match candidates' tool.  All other questions should be answered based on the context in the chat.
+```
+
+![alt text](./hands-on-lab-assets/behavior.png)
+
+### Test the agent
+
+Test your agent by providing two candidate resumes.  Enter the following query in chat: 
+
+```
+recommend a candidate for a job
+```
+
+The agent will ask you how many candidates you would like to evaluate.  Answer: 2
+
+You will then be asked to upload a candidate's resume. You can upload any candidate's resume, for example [Candidate 3.pdf](../data/Candidate%203.pdf).  Note you may be asked to review the extraction results - if the extractor's confidence is below 95%, human validation will be required.  This behavior can be easily configured within the document extractor node. The same is true for any other uploaded documents.
+
+You will then be asked to upload the second resume.  You can upload another candidate's resume, for exmaple [Candidate 1.pdf](../data/Candidate%201.pdf). 
+
+You will finally be asked to upload a job description.  You can use [Job Description.pdf](../data/📄%20Job%20Description.pdf). 
+
+The results should look similar to the following: 
+
+![alt text](./hands-on-lab-assets/table_output.png)
+
+As you can see, the columns marked with * are skills required by the job.  Other skills are preferred.
+Each candidate row shows which skills the candidate has.
+
+The agent summarizes by telling us who the recommended candidate is: 
+
+![alt text](./hands-on-lab-assets/recommended_candidate.png)
+
+## Pulling it all together
+
+In this part of the lab we automated the process of extracting skills from resumes and the job description and summarizing how well the candidates' skills match the skills required and preferred for the job.  We used **document processing** nodes to define the fields to be extracted from documents and to train the document processor. We then fed the output of the document processing nodes as input into the **generative prompt** node which composed the right prompt for the LLM to summarize how well candidate skills match the job requirements.
+We could easily expand this workflow with additional nodes and branches, for example to send an email to the highest-ranked candidates, to ask them to pick an interview slot, and to confirm their response was received. Running these tasks as a workflow allows for a more deterministic way to handle repetitive tasks, so that the agent can drive the process and involve the HR Manager know whenever their input is needed.
+
+As you noticed when you tested the flow, depending on how the confidence thresholds are set up in the document processing nodes, human verification can be requested to make sure field data is extracted correctly.  
+
+Combining agentic workflows with regular tools and individual tasks in an agent provides the greatest flexibility. A user can chat with the agent and invoke individual tasks as needed.  For more complex, multi-step processes, agentic workflows are a powerful tool that can manage the entire process from beginning to end.
+
+

@@ -1,4 +1,4 @@
-# Lab 5: Use Bob to Build Custom Tools
+# Lab 6: Use Bob to Build Custom Tools
 
 ## 📋 Overview
 

@@ -1,4 +1,4 @@
-# Lab 4: Use Bob to Build Agentic Flows for Expense Processing
+# Lab 6: Use Bob to Build Agentic Flows for Expense Processing
 
 ## 📋 Overview
 
@@ -216,7 +216,7 @@ if __name__ == "__main__":
 ## 🎨 Project Structure
 
 ```
-lab-4-bob-expense-flows/
+lab-5-bob-expense-flows/
 ├── README.md                          # This file
 ├── main.py                            # Flow testing script
 ├── import-all.sh                      # Import script
@@ -245,8 +245,8 @@ Open and read: `../assets/IBM i User Group - Create wxO Agentic Workflows with B
 ### Step 2: Set Up Project
 ```bash
 # Create project directory
-mkdir -p lab-4-bob-expense-flows/{tools,agents,generated,examples}
-cd lab-4-bob-expense-flows
+mkdir -p lab-5-bob-expense-flows/{tools,agents,generated,examples}
+cd lab-5-bob-expense-flows
 
 # Initialize Python package
 touch tools/__init__.py
@@ -441,7 +441,7 @@ tools:
 
 After completing this lab, proceed to:
 
-**[Lab 5: Use Bob to Build Custom Tools](../lab-5-bob-custom-tools/)**
+**[Lab 6: Use Bob to Build Custom Tools](../lab-5-bob-custom-tools/)**
 
 In Lab 5, you'll learn to:
 - Create reusable Python tools

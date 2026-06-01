@@ -1,4 +1,4 @@
-# Lab 3: Use Bob to Build a Custom Agent
+# Lab 5: Use Bob to Build a Custom Agent
 
 ## 📋 Overview
 
@@ -184,7 +184,7 @@ tools:                   # List of tools agent can use
 
 ## 🔍 Comparison: UI vs Code
 
-| Aspect | UI Development (Labs 1-2) | Code Development (Lab 3) |
+| Aspect | UI Development (Labs 1-2) | Code Development (Lab 5) |
 |--------|---------------------------|--------------------------|
 | **Speed** | Fast for simple agents | Faster for complex agents |
 | **Flexibility** | Limited to UI options | Full programmatic control |
@@ -255,7 +255,7 @@ orchestrate env activate local
 
 ### Related Labs
 - **Previous:** [Lab 2 - HR Flows in UI](../lab-2-hr-flows-ui/)
-- **Next:** [Lab 4 - Bob Expense Flows](../lab-4-bob-expense-flows/)
+- **Next:** [Lab 5 - Bob Expense Flows](../lab-4-bob-expense-flows/)
 
 ### External Resources
 - [Bobchestrate Workshop Home](https://juseljuk.github.io/bobchestrate-workshop/)
@@ -281,9 +281,9 @@ orchestrate env activate local
 
 After completing this lab, you're ready for:
 
-**[Lab 4: Use Bob to Build Agentic Flows for Expense Processing](../lab-4-bob-expense-flows/)**
+**[Lab 5: Use Bob to Build Agentic Flows for Expense Processing](../lab-4-bob-expense-flows/)**
 
-In Lab 4, you'll learn to:
+In Lab 5, you'll learn to:
 - Create complex workflows programmatically
 - Implement document processing
 - Build multi-step approval flows

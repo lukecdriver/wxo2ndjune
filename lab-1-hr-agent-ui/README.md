@@ -1,339 +1,278 @@
-# Lab 1: Build an HR Agent in the UI
 
-## 📋 Overview
+# 🧑‍💼 Agentic HR Manager
 
-**Duration:** ~45 minutes  
-**Level:** Beginner  
-**Prerequisites:** Access to watsonx Orchestrate instance
+## Table of Contents
 
-In this lab, you'll learn to create your first AI agent using the watsonx Orchestrate user interface. You'll build an HR Manager agent that can help employees with common HR tasks like benefits inquiries, policy questions, and more.
+- [Use case description](#use-case-description)
+- [Talent acquisition agent](#-talent-acquisition-agent)
+- [Automate talent acquisition agent using agentic workflows](#-automate-talent-acquisition-agent-using-agentic-workflows)
+- [HR case review agent](#-hr-case-review-agent)
+    
+## Use Case Description
 
----
+This is the story of **Luisa**. **Luisa** is an HR manager for a large corporation that's hiring 5,000 employees for their new division. Her struggle is two-fold:
 
-## 🎯 Learning Objectives
+1. **Recruiting candidates** for their open positions
+2. **Handling reports** from employees for potential Business Conduct Guidelines violations.
 
-By the end of this lab, you will be able to:
+For recruiting, Luisa gets many PDFs with candidate résumés. She has to:
 
-1. Navigate the watsonx Orchestrate interface
-2. Create and configure an AI agent from scratch
-3. Define agent instructions and personality
-4. Select and configure the appropriate LLM
-5. Add tools and capabilities to your agent
-6. Test your agent in the chat interface
-7. Understand agent configuration options
+- Check if candidates **fulfill the requirements** of a given position
+- Fill in a **table** with the skills/experience of each candidate
+- Select **candidates** to be interviewed
+- Assign **interviewers** from the team
+- Coordinate **interviews** with candidates and interviewers via email
+- Schedule **interviews**
+- Compile **feedback** from different reviewers
+- **Report back** the results to the hiring manager
 
----
+Luisa would like to make her hiring process more efficiently.
 
-## 🔗 Original Lab Materials
+## 🥇 Talent acquisition agent
 
-This lab is based on the **IBM Agentic AI Client Bootcamp - HR Talent Use Case**.
+This first agent will help with the recruiting process. Follow these steps to build your Talent Acquisition AI Agent:
 
-### 📚 Accessing the Lab
+1. Open watsonx Orchestrate. You will see the screen below. Then, click on **Create an Agent** at the bottom left and select **Create from scratch**.
 
-**Original Source:** IBM Agentic AI Client Bootcamp  
-**Repository:** github.ibm.com/skol/agentic-ai-client-bootcamp  
-**Use Case:** HR Talent Management  
-**Lab File:** `usecases/hr-talent/assets/hands-on-lab-hr-manager.md`
+<img width="1681" alt="welcome" src="https://github.ibm.com/skol/agentic-ai-client-bootcamp/assets/12043/6a7b9866-09ae-4c89-8902-20a8930f0e7a">
+<br>
+<br>
 
-**To access the original lab materials:**
-
-1. **If you have IBM GitHub access:**
-   ```bash
-   git clone git@github.ibm.com:skol/agentic-ai-client-bootcamp.git
-   cd agentic-ai-client-bootcamp/usecases/hr-talent/assets
-   # Open hands-on-lab-hr-manager.md
-   ```
-
-2. **If you don't have access:**
-   - Contact your IBM representative or bootcamp coordinator
-   - Request access to the Agentic AI Client Bootcamp materials
-   - Alternative: Follow the general guidance below
-
----
-
-## 🚀 Lab Overview (General Guidance)
-
-While the detailed step-by-step instructions are in the original lab materials, here's a general overview of what you'll build:
-
-### What You'll Create
-
-An **HR Manager Agent** that can:
-- Answer employee questions about benefits
-- Provide information about company policies
-- Help with HR-related inquiries
-- Direct employees to appropriate resources
-- Handle common HR scenarios
-
-### Key Components
-
-1. **Agent Configuration**
-   - Name: HR Manager
-   - Description: Helpful HR assistant
-   - Instructions: Detailed guidance on how to help employees
-
-2. **LLM Selection**
-   - Choose appropriate model (e.g., GPT-4, Granite)
-   - Configure temperature and parameters
-
-3. **Tools Integration**
-   - Knowledge base access (HR policies, benefits docs)
-   - Search capabilities
-   - Information retrieval tools
-
----
-
-## 🛠️ Prerequisites
-
-Before starting this lab, ensure you have:
-
-### 1. watsonx Orchestrate Access
-- ✅ Active watsonx Orchestrate instance
-- ✅ User account with agent creation permissions
-- ✅ Access to the UI (web interface)
-
-### 2. Knowledge Base (Optional)
-- HR policy documents
-- Benefits information
-- Company handbook
-- FAQs
-
-### 3. Browser
-- Modern web browser (Chrome, Firefox, Safari, Edge)
-- Stable internet connection
-
----
-
-## 📖 General Steps (High-Level)
-
-### Step 1: Access watsonx Orchestrate
-1. Log in to your watsonx Orchestrate instance
-2. Navigate to the Agents section
-3. Click "Create New Agent"
-
-### Step 2: Configure Basic Settings
-1. **Name your agent:** "HR Manager" or similar
-2. **Add description:** Brief explanation of agent's purpose
-3. **Select LLM:** Choose appropriate model
-4. **Set style:** Professional, helpful tone
-
-### Step 3: Write Agent Instructions
-Create detailed instructions that define:
-- Agent's role and responsibilities
-- How to interact with employees
-- What information to provide
-- When to escalate issues
-- Tone and personality
-
-Example instructions structure:
+2. Give it a name and a description. Descriptions are used to route a given query to this agent when needed. You can use the description below or experiment with your own:
 ```
-You are an HR Manager assistant helping employees with:
-- Benefits questions
-- Policy information
-- Leave requests
-- General HR inquiries
-
-Guidelines:
-- Be professional and empathetic
-- Provide accurate information
-- Direct to HR team for sensitive matters
-- Maintain confidentiality
+This agent helps figure out whether a set of candidates match the skills given in a job description
 ```
 
-### Step 4: Add Tools and Capabilities
-1. **Knowledge Base:** Upload HR documents
-2. **Search Tools:** Enable document search
-3. **Integration Tools:** Connect to HR systems (if available)
+<img width="600" alt="create-agent" src="https://github.ibm.com/skol/agentic-ai-client-bootcamp/assets/12043/8e821db1-99f1-43ba-a796-cc46ecaae0e1">
+<br>
+<br>
 
-### Step 5: Test Your Agent
-1. Open the chat interface
-2. Test various scenarios:
-   - "What are my health insurance options?"
-   - "How do I request time off?"
-   - "What is the company's remote work policy?"
-3. Refine instructions based on responses
+3. After clicking **Create**, you will be taken to this screen. Notice that by default the model should be set to **GPT-OSS 120B**. If not, use the dropdown menu to select it.
+<img width="1723" alt="profiile" src="https://github.ibm.com/user-attachments/assets/58af3961-7584-4d89-9ae3-b158ff90f159" />
+<br>
+<br>
 
-### Step 6: Iterate and Improve
-1. Review agent responses
-2. Adjust instructions for better accuracy
-3. Add more tools if needed
-4. Test edge cases
+4. Scroll down and enable the **Chat with Documents** toggle:
 
----
+<img width="713" alt="chat-with-documents" src="https://github.ibm.com/skol/agentic-ai-client-bootcamp/assets/12043/ca258ba3-149b-462f-a28c-8e3574707fbf">
+<br>
+<br>
 
-## 💡 Best Practices
+5. Now let's deploy the agent by clicking on the blue **Deploy** button. This is how easily you can deploy an agent in watsonx Orchestrate.
 
-### Agent Instructions
-- **Be Specific:** Clear, detailed instructions produce better results
-- **Define Boundaries:** Specify what the agent should and shouldn't do
-- **Include Examples:** Show the agent how to handle common scenarios
-- **Set Tone:** Define the personality and communication style
+<img width="600" alt="deploy" src="https://github.ibm.com/skol/agentic-ai-client-bootcamp/assets/12043/3d079a57-5969-4889-bd04-90a06e28d960">
+<br>
+<br>
 
-### Testing
-- **Test Thoroughly:** Try various question types
-- **Edge Cases:** Test unusual or complex scenarios
-- **User Perspective:** Think like an employee
-- **Iterate:** Continuously improve based on results
 
-### Knowledge Base
-- **Organize Content:** Structure documents logically
-- **Keep Updated:** Ensure information is current
-- **Clear Formatting:** Use headings and structure
-- **Comprehensive:** Cover common questions
+6. Now let's simmulate what the HR manager would do to automatically process résumés. First, download the résumés and job description files below. Once you have them in your local machine, upload them all at once by clicking on the **Upload** button below the chat. You can also drag and drop the files on the chat as an alternative.
 
----
 
-## 🎨 Example Agent Configuration
+- [Candidate 1's Résumé](../data/Candidate%201.pdf)
+- [Candidate 2's Résumé](../data/Candidate%202.pdf)
+- [Candidate 3's Résumé](../data/Candidate%203.pdf)
+- [Candidate 4's Résumé](../data/Candidate%204.pdf)
+- [Candidate 5's Résumé](../data/Candidate%205.pdf)
+- [Job Description](../data/Job%20Description.pdf)
 
-### Basic Configuration
-```yaml
-Name: HR Manager
-Description: Helpful AI assistant for employee HR questions
-LLM: gpt-4 (or equivalent)
-Style: Professional and empathetic
+<img width="600" alt="live" src="https://github.ibm.com/skol/agentic-ai-client-bootcamp/assets/12043/e4e4480c-4629-430f-aef2-7ebb64c25b26">
+<br>
+<br>
+
+
+7. You will see a confirmation of the files being uploaded as follows:
+
+<img width="685" alt="upload" src="https://github.ibm.com/skol/agentic-ai-client-bootcamp/assets/12043/4849445e-8936-44f4-9915-76850bd0841c">
+<br>
+<br>
+
+8. Now let's try a few different prompts to process the résumés and match them with the job description. First, let's summarize the skills and requirements in the job description:
+
+```
+Above, I have uploaded 5 documents with candidate resumes and one document with job description. Can you give me a short one-paragraph summary of the job description?
 ```
 
-### Sample Instructions
+9. Now let's check that the résumés were uploaded correctly by querying the names of the candidates:
+
 ```
-You are an HR Manager assistant for [Company Name]. Your role is to help 
-employees with HR-related questions and tasks.
-
-Your Responsibilities:
-1. Answer questions about benefits, policies, and procedures
-2. Provide information about leave policies and time-off requests
-3. Explain company policies clearly and accurately
-4. Direct employees to appropriate resources
-5. Escalate sensitive matters to human HR staff
-
-Guidelines:
-- Always be professional, empathetic, and helpful
-- Provide accurate information based on company policies
-- If you're unsure, direct the employee to HR
-- Maintain confidentiality and privacy
-- Use clear, simple language
-
-Topics You Can Help With:
-- Health insurance and benefits
-- Time-off and leave policies
-- Company policies and procedures
-- Onboarding information
-- General HR inquiries
-
-Topics to Escalate:
-- Complaints or grievances
-- Disciplinary matters
-- Salary negotiations
-- Sensitive personal issues
+give me the names of all the candidates
 ```
 
----
+<img width="687" alt="Screenshot 2025-09-25 at 10 44 18 AM" src="https://github.ibm.com/skol/agentic-ai-client-bootcamp/assets/12043/52594697-ccdc-4835-939e-6d380c7683aa">
+<br>
+<br>
 
-## 🔍 Common Use Cases
 
-### Benefits Inquiries
-**Employee:** "What health insurance plans are available?"  
-**Agent:** Provides overview of available plans, coverage details, and enrollment process
+10. Now let's generate a table matching the required skills with each candidate:
+```
+make a table where each row is a candidate and each column is a skill in the job description. Have the check emoji if the candidate does have the corresponding skill.
+```
 
-### Leave Requests
-**Employee:** "How do I request vacation time?"  
-**Agent:** Explains the process, required notice, and approval workflow
+<img width="685" alt="Screenshot 2025-09-25 at 10 26 30 AM" src="https://github.ibm.com/skol/agentic-ai-client-bootcamp/assets/12043/8b88bf74-7671-437d-8275-1a63901390e3">
+<br>
+<br>
 
-### Policy Questions
-**Employee:** "What is the remote work policy?"  
-**Agent:** Summarizes policy, eligibility, and requirements
+You can see that Emma is the person which has the best match of skills. However, the HR manager still needs to go and review Emma's profile and résumé before proceeding. It is important to keep a human in the loop, especially when making decisions affecting people. The goal of Agentic AI is to automate the tedious tasks rather than replacing the job of the HR manager.
 
-### Onboarding
-**Employee:** "I'm new, what do I need to know?"  
-**Agent:** Provides welcome information, key policies, and resources
+<!--11. Now let's ask for drafting an email to schedule an interview:
+```
+Draft an email asking Emma for three potential times for next week to interview.
+```
 
----
+<img width="685" alt="Screenshot 2025-09-25 at 10 26 53 AM" src="https://github.ibm.com/skol/agentic-ai-client-bootcamp/assets/12043/47a3ef11-20ce-4e15-82a2-13ca81ef4362">
 
-## 🐛 Troubleshooting
+-->
 
-### Agent Not Responding Correctly
-- **Review Instructions:** Ensure they're clear and specific
-- **Check Knowledge Base:** Verify documents are uploaded and accessible
-- **Test LLM:** Try different models or parameters
-- **Simplify:** Start with basic functionality, add complexity gradually
+11. Now let's work on scheduling the interviews. First, let's add interviewers data. In real life, this will come from a database or data lakehouse querying multiple systems in the organization. For simplicity, let's assume we have a PDF file with the availability of interviewers and their skills. We can use watsonx Orchestrate to add interviewers **Knowledge** to the agent. Scroll down to the **Knowledge** section and click on **Choose Knowledge**:
 
-### Inaccurate Information
-- **Update Knowledge Base:** Ensure documents are current
-- **Refine Instructions:** Add more specific guidance
-- **Add Examples:** Show the agent correct responses
-- **Test Sources:** Verify information accuracy
+<img width="733" alt="Screenshot 2025-09-25 at 10 58 53 AM" src="https://github.ibm.com/skol/agentic-ai-client-bootcamp/assets/12043/88c73733-5121-4f27-96d6-cb892c7cb84a">.
+<br>
+<br>
 
-### Agent Too Verbose or Too Brief
-- **Adjust Instructions:** Specify desired response length
-- **Modify LLM Parameters:** Adjust temperature and max tokens
-- **Provide Examples:** Show ideal response format
 
----
+12. Select **Upload Files** at the bottom, click **Next**:
 
-## ✅ Lab Completion Checklist
+<img width="1588" alt="Screenshot 2025-09-29 at 2 24 57 PM" src="https://github.ibm.com/skol/agentic-ai-client-bootcamp/assets/12043/788f7870-aee1-4a9a-9799-afb0932e4c2c">
+<br>
+<br>
 
-- [ ] Accessed watsonx Orchestrate UI
-- [ ] Created new HR Manager agent
-- [ ] Configured basic agent settings
-- [ ] Wrote comprehensive agent instructions
-- [ ] Added knowledge base or tools
-- [ ] Tested agent with multiple scenarios
-- [ ] Refined instructions based on testing
-- [ ] Documented agent configuration
-- [ ] Agent provides helpful, accurate responses
+13. Drag and Drop or upload the file [Interviewer availability dataset](../data/Interviewer%20availability.docx). Click **Next**:
 
----
+<img width="604" alt="Screenshot 2025-09-29 at 2 25 06 PM" src="https://github.ibm.com/skol/agentic-ai-client-bootcamp/assets/12043/8c6bc433-b4ff-442b-8204-7164dd94bdaa">
+<br>
+<br>
 
-## 🎓 What's Next?
+Now you need to set a description. This will be used to determine when to invoke the knowledge in the file. Add the following under **Description** and click **Save**:
 
-After completing this lab, proceed to:
+```
+This document has the availability and skills of different interviewers
+```
 
-**[Lab 2: Build Agentic Flows in the UI for HR Agent](../lab-2-hr-flows-ui/)**
+<img width="991" alt="Screenshot 2025-09-29 at 2 27 32 PM" src="https://github.ibm.com/skol/agentic-ai-client-bootcamp/assets/12043/7c334577-58f8-43f1-ba8f-56c9f5b4f8bd">
+<br>
+<br>
 
-In Lab 2, you'll learn to:
-- Create agentic workflows
-- Build multi-step processes
-- Connect flows to your HR agent
-- Implement complex business logic
 
----
+14. Now let's run some additional queries for the interviews. First, let's check if the interviewer data was loaded properly:
 
-## 📚 Additional Resources
+```
+show me the availability of interviewers
+```
 
-### watsonx Orchestrate Documentation
-- [Creating Agents](https://www.ibm.com/docs/en/watsonx/watson-orchestrate)
-- [Agent Best Practices](https://www.ibm.com/docs/en/watsonx/watson-orchestrate)
-- [Knowledge Base Setup](https://www.ibm.com/docs/en/watsonx/watson-orchestrate)
+<img width="667" alt="Screenshot 2025-09-29 at 11 51 36 AM" src="https://github.ibm.com/skol/agentic-ai-client-bootcamp/assets/12043/86d72ba9-945b-4d5b-8c46-9ae724936c48">
+<br>
+<br>
 
-### Related Topics
-- Prompt engineering for agents
-- LLM selection and configuration
-- Knowledge base optimization
-- Agent testing strategies
+15. Now let's help Luisa select the most adequate interviewers for the given job description:
 
----
+```
+who's the most proficient interviewer for the job description? Show me the skills they have
+```
+<img width="682" alt="Screenshot 2026-02-18 at 2 57 13 PM" src="https://github.ibm.com/user-attachments/assets/e742ab81-07d2-492a-ae51-d31bf806bc72" />
 
-## 🤝 Credits
 
-**Original Lab Author:** IBM Skills Academy Team  
-**Source:** IBM Agentic AI Client Bootcamp  
-**Repository:** github.ibm.com/skol/agentic-ai-client-bootcamp  
-**Use Case:** HR Talent Management
+16. Finally, let's pick an interviewer and draft an email to one of the candidates with the interviewers' availability:
+ 
+```
+draft an email to Emma to invite her for an interview with Aisha. Use Aisha's availability in the email draft
+```
+<img width="686" alt="email-draft" src="https://github.ibm.com/user-attachments/assets/6d2357bd-6c24-4329-843f-0cc7b16398a8" />
+<br>
+<br>
 
-This guide provides general guidance for the lab. For detailed step-by-step instructions with screenshots, please access the original lab materials from the IBM Agentic AI Client Bootcamp.
+## 🤖 Automate talent acquisition agent using agentic workflows
 
----
+Thus far, you built an agent leveraging the **Chat with documents** feature of watsonx Orchestrate to upload process résumés, job descriiptions and interviewer schedules. In this case the agent's LLM does all the heavy lifting while it is Luisa's role to provide the right prompt/query.  
 
-## 📧 Support
+However, it is often not obvious what the right prompt should be, especially for an HR Manager without prompt engineering background. Furthermore, there might be additional steps involved, such as automatically reaching out to the selected candidate or automatically scheduling interviews. In this case we could leverage **Agentic Workflows**. 
 
-**For Lab Access:**
-- Contact your IBM representative
-- Request bootcamp materials access
-- Join the IBM Skills Academy program
+The next part of the lab is more advanced and requires some low-coding skills and familiarity with basic programming concepts such as variables and for each loops. If you would like to learn how to work with **Agentic Workflows** [follow these steps](./hands-on-lab-hr-manager-flows.md)
 
-**For Technical Issues:**
-- Check watsonx Orchestrate documentation
-- Contact watsonx support
-- Review the [main README](../README.md)
+**🎉🎉 Congratulations!! You have completed the talent acquisition module. You're ready to go to the next one!**
 
----
+## 🧑‍💼📝 HR case review agent
 
-**Ready to build your first agent? Let's get started! 🚀**
+1. Create another agent as you did earlier. This time, add the following to the description:
+```
+This agent reviews HR cases from employee complaints of potential business conduct guidelines violations
+```
+
+<img width="723" alt="Screenshot 2025-09-25 at 10 59 02 AM" src="https://github.ibm.com/skol/agentic-ai-client-bootcamp/assets/12043/6a49ad39-b869-4846-be4a-43216386fdd7">
+<br>
+<br>
+
+2. Add knowledge to it. Scroll down for the **Knowledge** section and click on **Choose Knowledge**
+
+<img width="733" alt="Screenshot 2025-09-25 at 10 58 53 AM" src="https://github.ibm.com/skol/agentic-ai-client-bootcamp/assets/12043/88c73733-5121-4f27-96d6-cb892c7cb84a">
+<br>
+<br>
+
+3. Now you will upload the [IBM Business Conduct Guideliness Document](../data/ibm_business_conduct_guidelines.pdf). You can also experiment with your company's BCG if available. Enter a description. It could be something like this:
+
+```
+This is the IBM Business Conduct Guideliness
+```
+
+After saving, will see something like this:
+
+<img width="704" alt="Screenshot 2025-09-25 at 11 01 08 AM" src="https://github.ibm.com/skol/agentic-ai-client-bootcamp/assets/12043/ed0ff06f-3243-4b28-a8af-d82cfdf6c2d6">
+<br>
+<br>
+
+4. You're now ready to test some queries:
+
+```
+Help me understand if the following complaint from an employee infringes the IBM Business Conduct Guidelines: "my manager raised his voice and called me names and made fun of me and told me really nasty things every day for the past month"
+```
+
+<img width="683" alt="Screenshot 2025-09-25 at 11 03 56 AM" src="https://github.ibm.com/skol/agentic-ai-client-bootcamp/assets/12043/2c88e831-a267-4cc2-9c5c-9ddc03b75d19">
+<br>
+<br>
+
+```
+How about this one: my manager gave me a chocolate from Hawaii after her trip to Maui. Is this a BCG violation?
+```
+
+<img width="680" alt="Screenshot 2025-09-25 at 11 07 56 AM" src="https://github.ibm.com/skol/agentic-ai-client-bootcamp/assets/12043/e2326cb3-7a42-456c-aa47-c4bc6ee6d981">
+<br>
+<br>
+
+5. You can notice how the above might not be, in practice, a real violation to the Business Conduct Guidelines. We can tweak the agent to address certain situations differently. For that we can use the **Guidelines** feature. Scroll down to the **Guideliness** section and click on **New Guideline**:
+
+<img width="706" alt="Screenshot 2025-09-25 at 3 52 41 PM" src="https://github.ibm.com/skol/agentic-ai-client-bootcamp/assets/12043/12cf07ec-efea-4e2a-8c15-a3e60455e782">
+<br>
+<br>
+
+6. Save it and try the same query one more time in the chat. You should see something like this:
+
+<img width="623" alt="Screenshot 2025-09-25 at 3 53 09 PM" src="https://github.ibm.com/skol/agentic-ai-client-bootcamp/assets/12043/1d13bc4a-5844-4f00-8137-25b5c1f7b859">
+<br>
+<br>
+
+7. The result after retrying the same query would look like this:
+
+<img width="678" alt="Screenshot 2025-09-25 at 11 11 26 AM" src="https://github.ibm.com/skol/agentic-ai-client-bootcamp/assets/12043/0bf1d4ae-c5ba-4b52-8d81-23bfc8d464ee">
+<br>
+<br>
+
+## 🛠️ Let's put it all together
+
+We have seen how you can create two separate agents to address different business needs, namely (1) Talent Acquisition and (2) HR Case Reviews. But wouldn't it be cool to have a single interface to address both kinds of queries from the user? To do som let's create an HR Manager Agent able to route queries accordingly.
+
+1. Create a new agent. Use the same procedure above. In the description, provide some basic routing directions such as:
+
+```
+This agent manages different HR requests:
+
+1. Talent acquisition: processing resumes, job descriptions, ad interviewers, routing to the talent acquisition agent
+
+2. HR Case Reviewer: processing HR complaints or cases submitted by employees as potential violations to the Business Conduct Guideliness
+```
+
+2. Scroll down to the Agents section.
+3. Select Add from Local Instance
+4. Search for the two agents you just created and add them both.
+5. Now try different queries on the HR Manager Agent
+
+
+
