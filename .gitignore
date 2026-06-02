@@ -60,6 +60,7 @@ htmlcov/
 *.pptx
 *.docx
 !assets/*.pdf
+!*/data/*.pdf
 !assets/*.pptx
 
 # Temporary files
