@@ -136,7 +136,7 @@ Draft an email asking Emma for three potential times for next week to interview.
 <br>
 <br>
 
-13. Drag and Drop or upload the file [Interviewer availability dataset](../data/Interviewer%20availability.docx). Click **Next**:
+13. Drag and Drop or upload the file [Interviewer availability dataset](./data/Interviewer%20availability.docx). Click **Next**:
 
 ![Screenshot 2025-09-29 at 2 25 06 PM](./assets/Screenshot_2025_09_29_at_2_25_06 PM.png)
 <br>
