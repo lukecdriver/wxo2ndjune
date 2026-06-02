@@ -1,6 +1,6 @@
 # Lab 3: Setup Bob and watsonx Orchestrate ADK
 
-> **📥 Download Setup Guide:** [IBM i User Group - WxO Bob Setup.pptx](https://github.ibm.com/Luke-Driver/2ndJuneWxOBob/raw/main/assets/IBM%20i%20User%20Group%20-%20WxO%20Bob%20Setup.pptx)
+> **📥 Download Setup Guide:** [IBM i User Group - WxO Bob Setup.pptx](./assets/IBM%20i%20User%20Group%20-%20WxO%20Bob%20Setup.pptx)
 
 ## 📋 Overview
 
@@ -29,7 +29,7 @@ By the end of this lab, you will be able to:
 
 ### 📄 Complete Setup Instructions
 
-**Primary Reference:** `../assets/IBM i User Group - WxO Bob Setup.pptx`
+**Primary Reference:** `./assets/IBM i User Group - WxO Bob Setup.pptx`
 
 This comprehensive PowerPoint presentation contains:
 - Detailed installation steps with screenshots
@@ -376,7 +376,7 @@ This lab guide serves as a companion to the comprehensive PowerPoint setup mater
 ## 📧 Support
 
 **For Setup Issues:**
-- Review the PowerPoint guide: `../assets/IBM i User Group - WxO Bob Setup.pptx`
+- Review the PowerPoint guide: `./assets/IBM i User Group - WxO Bob Setup.pptx`
 - Check [ADK documentation](https://github.com/IBM/ibm-watsonx-orchestrate-adk)
 - Consult the [main README](../README.md)
 
