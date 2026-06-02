@@ -59,6 +59,7 @@ htmlcov/
 *.pdf
 *.pptx
 *.docx
+!*/data/*.docx
 !assets/*.pdf
 !*/data/*.pdf
 !assets/*.pptx
